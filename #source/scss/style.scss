@@ -1,114 +1,153 @@
 // Файл обнуляющих стилей
 @import "nullstyle.scss";
 
-body,html{
+$maxWidth: 1920;
+$maxWidthContainer: 1160;
+
+@mixin adaptiv-value ($property, $startSize, $minSize, $type) {
+	$addSize: $startSize - $minSize;
+
+	@if $type ==1 {
+		//Только если меньше контейнера
+		#{$property}: $startSize + px;
+
+		@media (max-width : #{$maxWidthContainer + px}) {
+			#{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidthContainer - 320}));
+		}
+	}
+
+	@else if $type ==2 {
+		//Только если больше контейнера
+		#{$property}: $startSize + px;
+
+		@media (min-width: #{$maxWidthContainer + px}) {
+			#{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+		}
+	}
+
+	@else {
+		//Всегда
+		#{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+	}
+}
+
+body,
+html {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-	background: linear-gradient(45deg,rgb(18, 18, 151), rgb(255, 144, 163));
+	background: linear-gradient(45deg, rgb(18, 18, 151), rgb(255, 144, 163));
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	user-select: none;
 }
 
-.wrapper{
+.wrapper {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	height: 100%;
 }
 
 .content {
 	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.container{
+.container {
 	max-width: 970px;
 	margin: 0 auto;
 	padding: 0 10px;
-	&_m{
-		height: 100%;
-	}
+
+	// &_m {
+	// 	height: 100%;
+	// }
 }
 
 
 .calculator {
-	margin: 70px 0px 0px 0px;
+	// @include adaptiv-value('margin-top', 70, 0, 1);
 
 	text-align: center;
 
-		&__header {
-			text-transform: uppercase;
-			font-size: 30px;
-			letter-spacing: 4px;
-			font-weight: 600;
-			background: linear-gradient(90deg, rgb(254, 254, 254) 30%, rgb(255, 127, 225));
-  			-webkit-background-clip: text;
-  			-webkit-text-fill-color: transparent;
-		}
+	&__header {
+		text-transform: uppercase;
+		@include adaptiv-value('font-size', 30, 30, 1);
+		@include adaptiv-value('letter-spacing', 4, 1, 1);
+		font-weight: 600;
+		background: linear-gradient(90deg, rgb(254, 254, 254) 30%, rgb(255, 127, 225));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
 
-		&__wrapper {
-			margin: 50px auto 0px auto;
-			width: 400px;
-		}
-	
-		&__input {
-			position: relative;
-			width: 100%;
-			height: 100px;
-			border-radius: 5px;
-			background-color: rgb(255, 255, 255);
-			padding: 0px 10px 0px 0px;
-			text-align: right;
-			font-size: 28px;
-		}
-	
-		&__panel {
-			margin: 10px 0px 0px 0px;
-		}
-		
-		&__row{
-			display: flex;
-			justify-content: center;
-		}
+	&__wrapper {
+		@include adaptiv-value('width', 400, 300, 1);
+		@include adaptiv-value('margin-top', 50, 25, 1);
+	}
 
-		&__button {
-			cursor: pointer;
-			flex: 0 1 25%;
-			margin: 7px 13px;
-			width: 70px;
-			height: 70px;
-			background-color: yellow;
-			font-size: 20px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: all 0.3s ease 0s;
+	&__input {
+		position: relative;
+		width: 93%;
+		@include adaptiv-value('height', 100, 85, 1);
+		border-radius: 5px;
+		background-color: rgb(255, 255, 255);
+		padding: 0px 10px;
+		text-align: right;
+		@include adaptiv-value('font-size', 28, 28, 1);
+	}
 
-			&:hover{
+	&__panel {
+		@include adaptiv-value('margin-top', 10, 10, 1);
+	}
+
+	&__row {
+		display: flex;
+		justify-content: center;
+	}
+
+	&__button {
+		cursor: pointer;
+		flex: 0 1 25%;
+		@include adaptiv-value('width', 70, 55, 1);
+		@include adaptiv-value('height', 70, 55, 1);
+		@include adaptiv-value('margin-top', 7, 5, 1);
+		@include adaptiv-value('margin-bottom', 7, 5, 1);
+		@include adaptiv-value('margin-left', 13, 7, 1);
+		@include adaptiv-value('margin-right', 13, 7, 1);
+		background-color: yellow;
+		font-size: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.3s ease 0s;
+
+		@media(any-hover:hover) {
+			&:hover {
 				opacity: 0.7;
 			}
-
-			&_lst{
-				flex: 1 1 21%;
-			}
-
-			&_res{
-				flex: 0 1 50%;
-				border-radius: 10px;
-				background-color: orangered;
-				color: #fff;
-			}
-
-			&_sys {
-				background-color: orangered;
-				color: #fff;
-				border-radius: 50%;
-			}
-	
-			&_num {
-				border-radius: 10px;
-			}
 		}
-	
-		&__result {
+
+		&_lst {
+			flex: 1 1 21%;
 		}
-	
+
+		&_res {
+			flex: 0 1 50%;
+			border-radius: 10px;
+			background-color: orangered;
+			color: #fff;
+		}
+
+		&_sys {
+			background-color: orangered;
+			color: #fff;
+			border-radius: 50%;
+		}
+
+		&_num {
+			border-radius: 10px;
+		}
+	}
+
+	&__result {}
+
 }
-
